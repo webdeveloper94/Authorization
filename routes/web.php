@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,4 +18,19 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
+Route::get('log',[AuthController::class, 'log']);
+Route::get('reg',[AuthController::class, 'reg']);
+
+//Route::resource('auth', [AuthController::class]);
+
 require __DIR__.'/auth.php';
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified'
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
